@@ -1,10 +1,6 @@
-import axios, { HttpStatusCode } from 'axios';
-import { useState } from 'react';
 import './App.css';
-import { ApiResponse } from './api_response/ApiResponse';
-import { PokemonList } from './api_response/api/v2/pokemon/PokemonList';
-import { Pokemon } from './api_response/api/v2/pokemon/_index/Pokemon';
 import { SimplePokedexMock } from './mocks/SimplePokedexMock';
+import PokedexRouter from './routes/PokedexRouter';
 
 // API モックの起動
 if (import.meta.env.VITE_USE_POKE_API_MOCK === `true`) {
@@ -12,24 +8,25 @@ if (import.meta.env.VITE_USE_POKE_API_MOCK === `true`) {
 }
 
 function App() {
-  const [pokemonList, setPokemonList] = useState<PokemonList>({
-    count: 0,
-    results: [],
-  });
+  // const [pokemonList, setPokemonList] = useState<PokemonList>({
+  //   count: 0,
+  //   results: [],
+  // });
 
-  const [pokemon, setPokemon] = useState<Pokemon>({
-    name: '',
-    height: 0,
-    weight: 0,
-    sprites: {},
-    types: [],
-    stats: [],
-    abilities: [],
-  });
+  // const [pokemon, setPokemon] = useState<Pokemon>({
+  //   name: '',
+  //   height: 0,
+  //   weight: 0,
+  //   sprites: {},
+  //   types: [],
+  //   stats: [],
+  //   abilities: [],
+  // });
 
   return (
     <>
-      <h1>Simple Pokedex2</h1>
+      <PokedexRouter />
+      {/* <h1>Simple Pokedex2</h1>
       <div className="card">
         <button onClick={async () => {
           const response = await axios.get(`https://pokeapi.co/api/v2/pokemon`)
@@ -93,9 +90,9 @@ function App() {
             (ability) => <p>{ability.ability.name}</p>
           )
         }
-      </div>
+      </div> */}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
