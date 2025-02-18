@@ -1,130 +1,14 @@
 import axios, { HttpStatusCode } from 'axios';
 import { useState } from 'react';
 import './App.css';
+import { ApiResponse } from './api_response/ApiResponse';
+import { PokemonList } from './api_response/api/v2/pokemon/PokemonList';
+import { Pokemon } from './api_response/api/v2/pokemon/_index/Pokemon';
+import { SimplePokedexMock } from './mocks/SimplePokedexMock';
 
-/**
- * APIレスポンス型
- */
-interface ApiResponse<T> {
-  // ステータスコード
-  status: number;
-  // レスポンスボディ
-  body?: T;
-}
-
-/**
- * ポケモン一覧取得結果
- */
-interface PokemonList {
-  // ポケモンの総数
-  count: number;
-  // 次のポケモン取得URL
-  next?: string;
-  // 前のポケモン取得URL
-  previous?: string;
-  // ポケモン一覧
-  results: Array<PokemonIndex>;
-}
-
-/**
- * ポケモン 取得情報
- */
-interface PokemonIndex {
-  // ポケモン名
-  name: string;
-  // 取得URL
-  url: string;
-}
-
-/**
- * ポケモン情報
- */
-interface Pokemon {
-  // ポケモン名
-  name: string;
-  // 高さ
-  height: number;
-  // 重さ
-  weight: number;
-  // 見た目
-  sprites: PokemonSprite;
-  // タイプ
-  types: Array<PokemonType>;
-  // 種族値
-  stats: Array<PokemonStat>;
-  // 特性
-  abilities: Array<PokemonAbility>;
-};
-
-/**
- * ポケモンの見た目
- */
-interface PokemonSprite {
-  // デフォルト 後ろ姿
-  back_default?: string;
-  // 後ろ姿 雌
-  back_female?: string;
-  // 後ろ姿 色違い
-  back_shiny?: string;
-  // 後ろ姿 色違い 雌
-  back_shiny_female?: string;
-  // デフォルト 前面
-  front_default?: string;
-  // 前面 雌
-  front_female?: string;
-  // 前面 色違い
-  front_shiny?: string;
-  // 前面 色違い 雌
-  front_shiny_female?: string;
-}
-
-/**
- * ポケモン タイプ情報
- */
-interface PokemonType {
-  // タイプ番号
-  slot: number;
-  // タイプ情報
-  type: {
-    // タイプ名
-    name: string;
-    // タイプ情報 取得URL
-    url: string;
-  };
-};
-
-/**
- * ポケモン種族値情報
- */
-interface PokemonStat {
-  // 種族値
-  base_stat: number;
-  // 努力値
-  effort: number;
-  // 種族値詳細情報
-  stat: {
-    // 種族値名
-    name: string;
-    // 種族値情報URL
-    url: string;
-  };
-};
-
-/**
- * ポケモン 特性情報
- */
-interface PokemonAbility {
-  // 特性詳細情報
-  ability: {
-    // 特性名
-    name: string;
-    // 特性 詳細情報URL
-    url: string;
-  };
-  // 夢(隠し)特性 フラグ
-  is_hidden: boolean;
-  // 特性番号
-  slot: number;
+// API モックの起動
+if (import.meta.env.VITE_USE_POKE_API_MOCK === `true`) {
+  SimplePokedexMock();
 }
 
 function App() {
@@ -173,7 +57,7 @@ function App() {
           previous: {pokemonList.previous}
         </p>
         <button onClick={async () => {
-          const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/1`)
+          const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${101}`)
             .then((response) => {
               return {
                 status: response.status,
@@ -188,7 +72,7 @@ function App() {
           console.log(response.body);
           setPokemon(response.body);
         }}>
-          GET Pokemon No. 1
+          GET Pokemon No. 101
         </button>
         <p>name: {pokemon.name}</p>
         {
