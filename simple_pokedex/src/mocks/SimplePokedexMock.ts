@@ -3,7 +3,9 @@ import MockAdapter from 'axios-mock-adapter';
 import { PokeApiMock } from './api/PokeApiMock';
 
 export const SimplePokedexMock = () => {
-  const mock = new MockAdapter(axios);
+  const mock = new MockAdapter(axios, {
+    onNoMatch: 'passthrough',
+  });
 
   PokeApiMock(mock);
 };
