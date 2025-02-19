@@ -1,4 +1,6 @@
-import { AppBar, Box, Toolbar, Typography } from '@mui/material';
+import { Box } from '@mui/material';
+import Header from '../../components/header/header';
+import ObtainedContents from './templates/ObtainedContents';
 
 /**
  * ポケモン図鑑
@@ -7,17 +9,10 @@ import { AppBar, Box, Toolbar, Typography } from '@mui/material';
 const PokedexPage = () => {
   return (
     <Box width="100vw" height="100vh">
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="sticky">
-          <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Pokedex
-            </Typography>
-          </Toolbar>
-        </AppBar>
-      </Box>
+      <Header title="Pokedex" />
       {/* <LoadingContents /> */}
       {/* <LoadingErrorContents /> */}
+      <ObtainedContents />
     </Box>
   );
 };
