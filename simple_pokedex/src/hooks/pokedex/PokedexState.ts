@@ -1,44 +1,39 @@
-import { Pokemon } from '../../api_response/api/v2/pokemon/_index/Pokemon';
+import axios, { HttpStatusCode } from 'axios';
+import { useCallback, useEffect, useReducer } from 'react';
+import { PokemonList } from '../../api_response/api/v2/pokemon/PokemonList';
+import { ApiResponse } from '../../api_response/ApiResponse';
+import PokedexReducer from '../../reducers/pokedex/PokedexReducer';
+import { PokedexStatus } from './@types';
 
-export type PokedexStates =
-  | { state: 'LOADING' }
-  | { state: 'LOADING_ERROR' }
-  | {
-      state: 'LOADED';
-      // pokemonList: Array<Pokemon>
-    }
-  | { state: 'ADDITIONAL_LOADING' }
-  | { state: 'ADDITIONAL_ERROR' };
+const PokedexHooks = (): PokedexStatus => {
+  const [state, dispatch] = useReducer(PokedexReducer, { state: 'LOADING' });
 
-export type PokedexActions =
-  | {
-      type: 'FETCHED';
-      // args: { pokemonList: Array<Pokemon> }
-    }
-  | {
-      type: 'FETCH_ERROR';
-    }
-  | {
-      type: 'ADDITIONAL_FETCH';
-    }
-  | {
-      type: 'ADDITIONAL_FETCHED';
-    };
+  const onLoad = useCallback(async () => {
+    const response: ApiResponse<PokemonList> = await axios
+      .get(`https://pokeapi.co/api/v2/pokemon`)
+      .then((response) => {
+        return {
+          status: response.status,
+          body: response.data as PokemonList,
+        };
+      });
 
-const PokedexState = (
-  state: PokedexStates,
-  actions: PokedexActions
-): PokedexStates => {
-  switch (actions.type) {
-    case 'FETCHED':
-      return { state: 'LOADED' };
-    case 'FETCH_ERROR':
-      return { state: 'LOADING_ERROR' };
-    case 'ADDITIONAL_FETCH':
-      return { state: 'ADDITIONAL_LOADING' };
-    case 'ADDITIONAL_FETCHED':
-      return { state: 'ADDITIONAL_ERROR' };
-  }
+    console.log(`pokemon list response `, response);
+    
+    if (response.status != HttpStatusCode.Ok) {
+      return;
+    }
+
+    dispatch({ type: 'FETCHED' });
+  }, []);
+
+  useEffect(() => {
+    onLoad();
+  }, []);
+
+  return {
+    state: state,
+  };
 };
 
-export default PokedexState;
+export default PokedexHooks;
